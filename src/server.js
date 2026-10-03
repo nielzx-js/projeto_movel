@@ -1,17 +1,24 @@
 require('dotenv').config()
-const sequelize=require('./database')
-require('./model/usuario')
+const express = require('express')
 
-if(require.main===module){
-    const port=process.env.PORT 
-    sequelize.sync({alter:true})
-    .then(()=>{
-        console.log("sincronizou")
-        app.listen(port,()=>{
-            console.log(`rodando em https://localhost:${port}`)
-        })
-    })
-    .catch((e)=>{
-        console.log("erro ao sincronizar o banco")
+const app = express()
+
+app.use(express.json())
+
+app.get('/', (req, res) => {
+    res.status(200).json({ status: 'online' })
+})
+
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' })
+})
+
+module.exports = app
+
+if (require.main === module) {
+    const port = process.env.PORT || 3000
+    app.listen(port, () => {
+        console.log(`rodando na porta ${port}`)
     })
 }
+
