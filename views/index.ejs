@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Usuários</h1>
+
+    <% if (erro) { %>
+        <p><strong>Erro:</strong> <%= erro %></p>
+    <% } %>
+
+    <h2>Novo usuário</h2>
+    <form action="/criar" method="POST">
+        <input type="text" name="nome" placeholder="Nome" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <button type="submit">Criar</button>
+    </form>
+
+    <h2>Lista</h2>
+    <% if (usuarios.length === 0) { %>
+        <p>Nenhum usuário cadastrado.</p>
+    <% } else { %>
+        <table border="1" cellpadding="6">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% usuarios.forEach(u => { %>
+                    <tr>
+                        <td><%= u.id %></td>
+                        <td><input form="editar-<%= u.id %>" type="text" name="nome" value="<%= u.nome %>" required></td>
+                        <td><input form="editar-<%= u.id %>" type="email" name="email" value="<%= u.email %>" required></td>
+                        <td>
+                            <form id="editar-<%= u.id %>" action="/editar/<%= u.id %>" method="POST">
+                                <button type="submit">Salvar</button>
+                            </form>
+                            <form action="/deletar/<%= u.id %>" method="POST" onsubmit="return confirm('Excluir este usuário?')">
+                                <button type="submit">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } %>
+</body>
+</html>
