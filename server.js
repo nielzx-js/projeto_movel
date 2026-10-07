@@ -4,12 +4,13 @@ const express = require('express')
 const sequelize = require('./database')
 const Usuario = require('./src/model/usuario')
 const usuariosRoutes = require('./src/routes/usuarios')
-
 const app = express()
 
 app.engine('ejs', require('ejs').__express) // garante que o Vercel empacote o ejs
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
+
+module.exports = app
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true })) // lê os forms HTML
@@ -30,7 +31,7 @@ app.use(async (req, res, next) => {
 async function renderIndex(res, erro = null, status = 200) {
     const usuarios = await Usuario.findAll({ order: [['id', 'ASC']] })
     res.status(status).render('index', { usuarios, erro })
-}
+}//busca todo os usuarios 
 
 app.get('/', async (req, res, next) => {
     try {
@@ -68,6 +69,8 @@ app.post('/deletar/:id', async (req, res, next) => {
         next(e)
     }
 })
+
+
 
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok' })
